@@ -12,21 +12,25 @@ List<Champion> championList = [
     'High Noon Samira',
   ),
   Champion(
-      'https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Jinx_13.jpg',
-      'Jinx',
-      'Odyssey Jinx'),
+    'https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Jinx_13.jpg',
+    'Jinx',
+    'Odyssey Jinx',
+  ),
   Champion(
-      'https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Aatrox_7.jpg',
-      'Aatrox',
-      'Blood Moon Aatrox'),
+    'https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Aatrox_7.jpg',
+    'Aatrox',
+    'Blood Moon Aatrox',
+  ),
   Champion(
-      'https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Jhin_5.jpg',
-      'Jhin',
-      'Dark Cosmic Jhin'),
+    'https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Jhin_5.jpg',
+    'Jhin',
+    'Dark Cosmic Jhin',
+  ),
   Champion(
-      'https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Gwen_11.jpg',
-      'Gwen',
-      'Cafe Cuties Gwen')
+    'https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Gwen_11.jpg',
+    'Gwen',
+    'Cafe Cuties Gwen',
+  ),
 ];
 
 class MyApp extends StatelessWidget {
@@ -148,8 +152,8 @@ class _ChampionCardState extends State<ChampionCard> {
       child: Container(
         decoration: BoxDecoration(
             color: const Color.fromRGBO(9, 20, 40, 1),
-            border:
-                Border.all(color: const Color.fromRGBO(200, 155, 60, 1), width: 1)),
+            border: Border.all(
+                color: const Color.fromRGBO(200, 155, 60, 1), width: 1)),
         padding: const EdgeInsets.all(8.0),
         height: 180,
         child: Row(
