@@ -1,37 +1,56 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import 'package:variables/model/champion.dart';
 
 void main() {
   runApp(const MyApp());
 }
 
-List<Champion> championList = [
-  Champion(
-    'https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Samira_20.jpg',
-    'Samira',
-    'High Noon Samira',
-  ),
-  Champion(
-    'https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Jinx_13.jpg',
-    'Jinx',
-    'Odyssey Jinx',
-  ),
-  Champion(
-    'https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Aatrox_7.jpg',
-    'Aatrox',
-    'Blood Moon Aatrox',
-  ),
-  Champion(
-    'https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Jhin_5.jpg',
-    'Jhin',
-    'Dark Cosmic Jhin',
-  ),
-  Champion(
-    'https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Gwen_11.jpg',
-    'Gwen',
-    'Cafe Cuties Gwen',
-  ),
-];
+List<Champion> parseChampions(String responseBody) {
+  var data = jsonDecode(responseBody);
+  final Map<String, dynamic> datafinal = data['data'];
+  List<Champion> champlist = [];
+  datafinal.forEach((champion, data) {
+    champlist.add(Champion.fromJson(data));
+    print(data);
+  });
+  return champlist;
+}
+
+Future<List<Champion>> fetchChampionResponse(http.Client client) async {
+  final response = await client.get(Uri.parse(
+      "http://ddragon.leagueoflegends.com/cdn/13.9.1/data/en_US/champion.json"));
+  return parseChampions(response.body);
+}
+// List<Champion> championList = [
+//   Champion(
+//     'https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Samira_20.jpg',
+//     'Samira',
+//     'High Noon Samira',
+//   ),
+//   Champion(
+//     'https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Jinx_13.jpg',
+//     'Jinx',
+//     'Odyssey Jinx',
+//   ),
+//   Champion(
+//     'https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Aatrox_7.jpg',
+//     'Aatrox',
+//     'Blood Moon Aatrox',
+//   ),
+//   Champion(
+//     'https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Jhin_5.jpg',
+//     'Jhin',
+//     'Dark Cosmic Jhin',
+//   ),
+//   Champion(
+//     'https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Gwen_11.jpg',
+//     'Gwen',
+//     'Cafe Cuties Gwen',
+//   ),
+// ];
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -51,6 +70,7 @@ class MyApp extends StatelessWidget {
 
 class TelaPotente extends StatelessWidget {
   const TelaPotente({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -99,10 +119,25 @@ class TelaPotente extends StatelessWidget {
           Expanded(
             child: Container(
               color: const Color.fromRGBO(30, 35, 40, 1),
-              child: ListView.builder(
-                itemCount: championList.length,
-                itemBuilder: (context, index) {
-                  return ChampionCard(championEntry: championList[index]);
+              child: FutureBuilder<List<Champion>>(
+                future: fetchChampionResponse(http.Client()),
+                builder: (context, snapshot) {
+                  if (snapshot.hasError) {
+                    return Center(
+                      child: Text(
+                        "Error ${snapshot.error.toString()}",
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    );
+                  } else if (snapshot.hasData) {
+                    return ChampionListView(
+                      champions: snapshot.data!,
+                    );
+                  } else {
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  }
                 },
               ),
             ),
@@ -132,7 +167,21 @@ class TelaPotente extends StatelessWidget {
   }
 }
 
-class ChampionCard extends StatefulWidget {
+class ChampionListView extends StatelessWidget {
+  const ChampionListView({super.key, required this.champions});
+  final List<Champion> champions;
+  @override
+  Widget build(BuildContext context) {
+    return ListView.builder(
+      itemCount: champions.length,
+      itemBuilder: (context, index) {
+        ChampionCard(championEntry: champions[index]);
+      },
+    );
+  }
+}
+
+class ChampionCard extends StatelessWidget {
   const ChampionCard({
     super.key,
     required this.championEntry,
@@ -140,11 +189,6 @@ class ChampionCard extends StatefulWidget {
 
   final Champion championEntry;
 
-  @override
-  State<ChampionCard> createState() => _ChampionCardState();
-}
-
-class _ChampionCardState extends State<ChampionCard> {
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -165,7 +209,7 @@ class _ChampionCardState extends State<ChampionCard> {
                   border: Border.all(
                       color: const Color.fromRGBO(120, 90, 40, 1), width: 1)),
               child: Image.network(
-                widget.championEntry.imageUrl,
+                championEntry.skinUrl,
                 height: 160,
                 width: 160,
                 fit: BoxFit.cover,
@@ -179,7 +223,7 @@ class _ChampionCardState extends State<ChampionCard> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      widget.championEntry.championName,
+                      championEntry.championName,
                       textAlign: TextAlign.start,
                       style: const TextStyle(
                           fontSize: 24,
@@ -187,7 +231,7 @@ class _ChampionCardState extends State<ChampionCard> {
                           color: Color.fromRGBO(240, 230, 210, 1)),
                     ),
                     Text(
-                      widget.championEntry.skinName,
+                      championEntry.skinName,
                       textAlign: TextAlign.start,
                       style: const TextStyle(
                           fontSize: 20,

@@ -1,6 +1,25 @@
+class ChampionResponse {
+  final String type;
+  final List<Champion> champion;
+  ChampionResponse({required this.type, required this.champion});
+
+  factory ChampionResponse.fromJson(Map<String, dynamic> json) {
+    var list = json['data'] as List;
+    List<Champion> championList =
+        list.map((e) => Champion.fromJson(e)).toList();
+    return ChampionResponse(type: json['type'], champion: championList);
+  }
+}
+
 class Champion {
-  String imageUrl = "";
-  String championName = "";
+  String skinUrl = "";
+  String splashUrl = "";
+  final String championName;
   String skinName = "";
-  Champion(this.imageUrl, this.championName, this.skinName);
+
+  Champion({required this.championName});
+
+  factory Champion.fromJson(Map<String, dynamic> json) {
+    return Champion(championName: json['name']);
+  }
 }
