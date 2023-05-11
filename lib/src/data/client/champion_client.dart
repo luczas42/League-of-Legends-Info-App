@@ -1,9 +1,9 @@
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
-import 'package:variables/repository/champion_repository.dart';
+import 'package:variables/src/data/repositories/champion_repository.dart';
 
-import '../model/champion.dart';
+import '../../domain/model/champion.dart';
 
 class ChampionClient {
   final client = http.Client();

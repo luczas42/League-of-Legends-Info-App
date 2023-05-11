@@ -1,6 +1,6 @@
-import 'package:variables/client/champion_client.dart';
+import 'package:variables/src/data/client/champion_client.dart';
 
-import '../model/champion.dart';
+import '../../domain/model/champion.dart';
 
 class ChampionRepository {
 
