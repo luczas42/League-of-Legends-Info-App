@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 
 import '../../data/repositories/champion_repository.dart';
 import '../../domain/model/champion.dart';
+import '../../locator.dart';
 import '../widgets/champion_card_item.dart';
+
 
 class TelaPotente extends StatelessWidget {
   TelaPotente({super.key});
-  ChampionRepository repository = ChampionRepository();
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -57,7 +57,7 @@ class TelaPotente extends StatelessWidget {
             child: Container(
               color: const Color.fromRGBO(30, 35, 40, 1),
               child: FutureBuilder<List<Champion>>(
-                future: repository.fecthChampions(),
+                future: locator.get<ChampionRepository>().fecthChampions(),
                 builder: (context, snapshot) {
                   if (snapshot.hasError) {
                     return Center(

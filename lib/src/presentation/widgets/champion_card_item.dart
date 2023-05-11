@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../core/utils/text_size_config.dart';
+import '../../core/utils/size_config.dart';
 import '../../domain/model/champion.dart';
 
 class ChampionCard extends StatelessWidget {

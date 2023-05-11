@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:variables/src/locator.dart';
 
-import 'src/presentation/home/home_page.dart';
+import 'presentation/home/home_page.dart';
 
 void main() {
+  setup();
   runApp(const MyApp());
 }
 
