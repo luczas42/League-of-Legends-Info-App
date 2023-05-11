@@ -38,31 +38,3 @@ class Champion {
     return title[0].toUpperCase()+title.substring(1);
   }
 }
-
-// List<Champion> championList = [
-//   Champion(
-//     'https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Samira_20.jpg',
-//     'Samira',
-//     'High Noon Samira',
-//   ),
-//   Champion(
-//     'https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Jinx_13.jpg',
-//     'Jinx',
-//     'Odyssey Jinx',
-//   ),
-//   Champion(
-//     'https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Aatrox_7.jpg',
-//     'Aatrox',
-//     'Blood Moon Aatrox',
-//   ),
-//   Champion(
-//     'https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Jhin_5.jpg',
-//     'Jhin',
-//     'Dark Cosmic Jhin',
-//   ),
-//   Champion(
-//     'https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Gwen_11.jpg',
-//     'Gwen',
-//     'Cafe Cuties Gwen',
-//   ),
-// ];

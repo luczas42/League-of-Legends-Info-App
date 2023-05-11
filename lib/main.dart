@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:variables/model/champion.dart';
 import 'package:variables/repository/champion_repository.dart';
@@ -180,19 +182,21 @@ class ChampionCard extends StatelessWidget {
                     Text(
                       championEntry.championName,
                       textAlign: TextAlign.start,
-                      style: TextStyle(
-                        fontSize: 24 * MediaQuery.textScaleFactorOf(context),
+                      textScaleFactor: ScaleSize.textScaleFactor(context),
+                      style: const TextStyle(
+                        fontSize: 24,
                         fontWeight: FontWeight.bold,
-                        color: const Color.fromRGBO(240, 230, 210, 1),
+                        color: Color.fromRGBO(240, 230, 210, 1),
                       ),
                     ),
                     Text(
                       championEntry.titleToCapitalized(),
                       textAlign: TextAlign.start,
-                      style: TextStyle(
-                        fontSize: 20 * MediaQuery.textScaleFactorOf(context),
+                      textScaleFactor: ScaleSize.textScaleFactor(context),
+                      style: const TextStyle(
+                        fontSize: 20,
                         fontWeight: FontWeight.bold,
-                        color: const Color.fromRGBO(200, 155, 60, 1),
+                        color: Color.fromRGBO(200, 155, 60, 1),
                       ),
                     ),
                     Text(
@@ -200,9 +204,10 @@ class ChampionCard extends StatelessWidget {
                       textAlign: TextAlign.start,
                       maxLines: 3,
                       overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
-                        fontSize: 18 * MediaQuery.textScaleFactorOf(context),
-                        color: const Color.fromRGBO(200, 155, 60, 1),
+                      textScaleFactor: ScaleSize.textScaleFactor(context),
+                      style: const TextStyle(
+                        fontSize: 18,
+                        color: Color.fromRGBO(200, 155, 60, 1),
                       ),
                     ),
                   ],
@@ -213,5 +218,14 @@ class ChampionCard extends StatelessWidget {
         ),
       ),
     );
+  }
+}
+
+class ScaleSize {
+  static double textScaleFactor(BuildContext context,
+      {double maxTextScaleFactor = 2}) {
+    final width = MediaQuery.of(context).size.width;
+    double val = (width / 1400) * maxTextScaleFactor;
+    return max(1, min(val, maxTextScaleFactor));
   }
 }
