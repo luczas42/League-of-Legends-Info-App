@@ -1,61 +1,15 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 import 'package:variables/model/champion.dart';
+import 'package:variables/repository/champion_repository.dart';
 
 void main() {
   runApp(const MyApp());
 }
 
-List<Champion> parseChampions(String responseBody) {
-  var data = jsonDecode(responseBody);
-  final Map<String, dynamic> datafinal = data['data'];
-  List<Champion> champlist = [];
-  datafinal.forEach((champion, data) {
-    champlist.add(Champion.fromJson(data));
-    print(data);
-  });
-  return champlist;
-}
-
-Future<List<Champion>> fetchChampionResponse(http.Client client) async {
-  final response = await client.get(Uri.parse(
-      "http://ddragon.leagueoflegends.com/cdn/13.9.1/data/en_US/champion.json"));
-  return parseChampions(response.body);
-}
-// List<Champion> championList = [
-//   Champion(
-//     'https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Samira_20.jpg',
-//     'Samira',
-//     'High Noon Samira',
-//   ),
-//   Champion(
-//     'https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Jinx_13.jpg',
-//     'Jinx',
-//     'Odyssey Jinx',
-//   ),
-//   Champion(
-//     'https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Aatrox_7.jpg',
-//     'Aatrox',
-//     'Blood Moon Aatrox',
-//   ),
-//   Champion(
-//     'https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Jhin_5.jpg',
-//     'Jhin',
-//     'Dark Cosmic Jhin',
-//   ),
-//   Champion(
-//     'https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Gwen_11.jpg',
-//     'Gwen',
-//     'Cafe Cuties Gwen',
-//   ),
-// ];
+ChampionRepository repository = ChampionRepository();
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
-
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -120,12 +74,12 @@ class TelaPotente extends StatelessWidget {
             child: Container(
               color: const Color.fromRGBO(30, 35, 40, 1),
               child: FutureBuilder<List<Champion>>(
-                future: fetchChampionResponse(http.Client()),
+                future: repository.fecthChampions(),
                 builder: (context, snapshot) {
                   if (snapshot.hasError) {
                     return Center(
                       child: Text(
-                        "Error ${snapshot.error.toString()}",
+                        "Erro ${snapshot.error.toString()}",
                         style: TextStyle(color: Colors.white),
                       ),
                     );
@@ -175,7 +129,7 @@ class ChampionListView extends StatelessWidget {
     return ListView.builder(
       itemCount: champions.length,
       itemBuilder: (context, index) {
-        ChampionCard(championEntry: champions[index]);
+        return ChampionCard(championEntry: champions[index]);
       },
     );
   }
@@ -195,11 +149,12 @@ class ChampionCard extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
       child: Container(
         decoration: BoxDecoration(
-            color: const Color.fromRGBO(9, 20, 40, 1),
-            border: Border.all(
-                color: const Color.fromRGBO(200, 155, 60, 1), width: 1)),
+          color: const Color.fromRGBO(9, 20, 40, 1),
+          border: Border.all(
+              color: const Color.fromRGBO(200, 155, 60, 1), width: 1),
+        ),
         padding: const EdgeInsets.all(8.0),
-        height: 180,
+        height: 190 * MediaQuery.textScaleFactorOf(context),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -209,9 +164,9 @@ class ChampionCard extends StatelessWidget {
                   border: Border.all(
                       color: const Color.fromRGBO(120, 90, 40, 1), width: 1)),
               child: Image.network(
-                championEntry.skinUrl,
-                height: 160,
-                width: 160,
+                'https://ddragon.leagueoflegends.com/cdn/img/champion/splash/${championEntry.splashUrl}_0.jpg',
+                height: 150 * MediaQuery.textScaleFactorOf(context),
+                width: 150 * MediaQuery.textScaleFactorOf(context),
                 fit: BoxFit.cover,
               ),
             ),
@@ -225,18 +180,30 @@ class ChampionCard extends StatelessWidget {
                     Text(
                       championEntry.championName,
                       textAlign: TextAlign.start,
-                      style: const TextStyle(
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold,
-                          color: Color.fromRGBO(240, 230, 210, 1)),
+                      style: TextStyle(
+                        fontSize: 24 * MediaQuery.textScaleFactorOf(context),
+                        fontWeight: FontWeight.bold,
+                        color: const Color.fromRGBO(240, 230, 210, 1),
+                      ),
                     ),
                     Text(
-                      championEntry.skinName,
+                      championEntry.titleToCapitalized(),
                       textAlign: TextAlign.start,
-                      style: const TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                          color: Color.fromRGBO(200, 155, 60, 1)),
+                      style: TextStyle(
+                        fontSize: 20 * MediaQuery.textScaleFactorOf(context),
+                        fontWeight: FontWeight.bold,
+                        color: const Color.fromRGBO(200, 155, 60, 1),
+                      ),
+                    ),
+                    Text(
+                      championEntry.blurb,
+                      textAlign: TextAlign.start,
+                      maxLines: 3,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        fontSize: 18 * MediaQuery.textScaleFactorOf(context),
+                        color: const Color.fromRGBO(200, 155, 60, 1),
+                      ),
                     ),
                   ],
                 ),
