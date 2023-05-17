@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:variables/src/presentation/usecases/get_all_champions_use_case_.dart';
 
-import '../../data/repositories/champion_repository.dart';
-import '../../domain/model/champion.dart';
-import '../../locator.dart';
+import '../../data/model/champion_entry_model.dart';
 import '../widgets/champion_card_item.dart';
 
 
-class TelaPotente extends StatelessWidget {
-  TelaPotente({super.key});
+class HomePage extends StatelessWidget {
+  final GetAllChampionsUseCase iGetAllChampionsUseCase;
+  const HomePage({super.key, required this.iGetAllChampionsUseCase});
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -26,7 +26,7 @@ class TelaPotente extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.all(2.0),
               child: ClipOval(
-                child: Image.asset('lib/images/photo.jpg'),
+                child: Image.asset('assets/images/photo.jpg'),
               ),
             ),
           ),
@@ -56,14 +56,14 @@ class TelaPotente extends StatelessWidget {
           Expanded(
             child: Container(
               color: const Color.fromRGBO(30, 35, 40, 1),
-              child: FutureBuilder<List<Champion>>(
-                future: locator.get<ChampionRepository>().fecthChampions(),
+              child: FutureBuilder<List<ChampionEntryModel>>(
+                future: iGetAllChampionsUseCase(),
                 builder: (context, snapshot) {
                   if (snapshot.hasError) {
                     return Center(
                       child: Text(
                         "Erro ${snapshot.error.toString()}",
-                        style: TextStyle(color: Colors.white),
+                        style: const TextStyle(color: Colors.white),
                       ),
                     );
                   } else if (snapshot.hasData) {
@@ -106,7 +106,7 @@ class TelaPotente extends StatelessWidget {
 
 class ChampionListView extends StatelessWidget {
   const ChampionListView({super.key, required this.champions});
-  final List<Champion> champions;
+  final List<ChampionEntryModel> champions;
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
